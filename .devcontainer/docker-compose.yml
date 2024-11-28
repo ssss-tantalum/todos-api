@@ -1,0 +1,26 @@
+version: "3.8"
+
+volumes:
+  mariadb-data:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+  db:
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/sql:/docker-entrypoint-initdb.d
+    environment:
+      MARIADB_DATABASE: app_dev
+      MARIADB_ROOT_PASSWORD: root

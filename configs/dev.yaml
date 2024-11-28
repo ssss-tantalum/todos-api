@@ -1,0 +1,4 @@
+debug: true
+
+db:
+  dsn: root:root@tcp(127.0.0.1:3306)/api_dev?charset=utf8mb4&parseTime=True&loc=Local
